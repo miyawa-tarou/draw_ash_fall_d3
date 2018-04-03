@@ -52,7 +52,19 @@
 
             d3.xml('./data/VFVO53_test.xml').then(function(data) {
                 var ashCoordinate = convertCoordinateToArray(getFirstCoordinate(data));
-                console.log(ashCoordinate);
+                var svgCoordinate = [];
+                for (var i = 0; i < ashCoordinate.length; i++) {
+                    // 緯度経度をSVG上の座標に変換する。またのちの処理のため文字列での,区切りに変える。
+                    svgCoordinate.push(projection([ashCoordinate[i][1], ashCoordinate[i][0]]).join(',')); // convertCoordinateToArray内で順番変えたほうが賢い
+                }
+                svg.append('g')
+                    .attr('class', 'ashFall')
+                    .append("polygon")
+                    .attr("points", svgCoordinate.join(' ')) // 各座標はスペース区切りで、"x,y x,y x,y"
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 1)
+                    .attr("fill", "#333")
+                    .attr("fill-opacity", "0.5");
             });
 
         });
