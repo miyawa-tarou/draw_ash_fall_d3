@@ -50,7 +50,47 @@
                 .attr('stroke', 'black')
                 .attr('fill', 'black');
 
+            d3.xml('./data/VFVO53_test.xml').then(function(data) {
+                var ashCoordinate = convertCoordinateToArray(getFirstCoordinate(data));
+                console.log(ashCoordinate);
+            });
+
         });
+
+
+        /**
+         * 一つ目の降灰予報のPolygon情報だけ取る
+         * @param data 降灰予報XML
+         * @returns {string}
+         */
+        function getFirstCoordinate(data) {
+            var ashInfo = data.getElementsByTagName('AshInfo');
+
+            var kind = ashInfo[0].getElementsByTagName('Kind'); // 一つ目なので0でforで回せばその後の時間も取れます
+            for (var j = 0; j < kind.length; j++) {
+                if (kind[j].getElementsByTagName('Code')[0].innerHTML === "70") { // 降灰の70だけとる
+                    return kind[j].getElementsByTagName('jmx_eb:Polygon')[0].innerHTML;
+                }
+            }
+        }
+
+        /**
+         * 文字列の緯度経度情報を配列にする
+         * @param string
+         * @returns {Array}
+         */
+        function convertCoordinateToArray(string) {
+            var array = string.split('/');
+            var coordinates = [];
+            for (var i = 0; i < array.length; i++) {
+                if (array[i] === "") {
+                    continue;
+                }
+                var tmp = array[i].split('+'); // -もあるかもだが今回の本質でないので+のみ（いい感じの方法があったら知りたい）
+                coordinates.push([tmp[1],tmp[2]]); // 先頭に+がついているので0は空になり不要
+            }
+            return coordinates;
+        }
     })();
 
 </script>
