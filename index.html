@@ -37,7 +37,7 @@
                 .enter() // dataで入れた配列をそれぞれ以下のpathにしていく
                 .append("path")
                 .attr("d", path) // <path d="">に　path()の返り値を入れていく
-                .attr("fill", function(d,i){ return "green";}); // こういうのができるよ的な意味からreturnで返してみる
+                .attr("fill", function(d,i){ return d.properties.code === 46 ? "darkgreen" : "green";}); // 鹿児島だけダークグリーン
 
             // 本当は三角形が良かったが、正三角形は複雑なので円でごまかす
             var coordinate = projection([130.65, 31.6]);
